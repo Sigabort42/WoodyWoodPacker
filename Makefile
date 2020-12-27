@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME	=	woody
+NAME	=	woody_woodpacker
 
 CC	=	gcc
 
@@ -26,7 +26,7 @@ all:	$(NAME)
 $(NAME):	$(OBJS)
 	@make -C ./libft
 	@$(CC) $(CFLAGS) $(OBJS) -L./libft -lft -o $(NAME)
-	@echo "\033[H\033[2J\033[32mBinary Woody [\033[32;5mCreated\033[0m\033[32\
+	@echo "\033[H\033[2J\033[32mBinary woody_woodpacker [\033[32;5mCreated\033[0m\033[32\
 m]"
 
 clean:
@@ -37,7 +37,7 @@ clean:
 fclean:	clean
 	@make -C ./libft fclean
 	@/bin/rm -rf $(NAME)
-	@echo "\033[H\033[2J\033[32mBinary Woody [\033[32;5mCleared\033[0m\
+	@echo "\033[H\033[2J\033[32mBinary woody_woodpacker [\033[32;5mCleared\033[0m\
 \033[32m]"
 
 re:	fclean all

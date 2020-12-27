@@ -14,21 +14,21 @@
 
 int	run(char *file)
 {
-	struct stat     buf;
-        int             fd;
-        void            *ptr;
+	struct stat	buf;
+	void		*ptr;
+	int		fd;
 
-        if ((fd = open(file, O_RDONLY)) < 0)
-                return (1);
-        if (fstat(fd, &buf) < 0)
-                return (2);
-        if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) ==
-                MAP_FAILED)
-                return (3);
-        woody(ptr);
-        if (munmap(ptr, buf.st_size) < 0)
-                return (4);
-        return (0);
+	if ((fd = open(file, O_RDONLY)) < 0)
+		return (1);
+	if (fstat(fd, &buf) < 0)
+		return (2);
+	if ((ptr = mmap(0, buf.st_size, PROT_READ, MAP_PRIVATE, fd, 0)) ==
+	MAP_FAILED)
+		return (3);
+	woody(ptr);
+	if (munmap(ptr, buf.st_size) < 0)
+		return (4);
+	return (0);
 }
 
 int	main(int ac, char **av)

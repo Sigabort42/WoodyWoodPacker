@@ -35,7 +35,7 @@ char			*ft_itoa_base_maj(int value, int base)
 	res = NULL;
 	if (base == 10)
 		return (ft_itoa(value));
-	value = (value < 0) ? (unsigned int)value : value;
+	value = (value < 0) ? (unsigned int)value : (unsigned int)value;
 	i = ft_count(value, base);
 	res = (char*)malloc(sizeof(char) * i);
 	res[i] = 0;

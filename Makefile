@@ -12,7 +12,7 @@
 
 NAME	=	woody_woodpacker
 
-CC	=	gcc
+CC	=	/usr/bin/clang
 
 CFLAGS	=	-Wall -Wextra -Werror
 

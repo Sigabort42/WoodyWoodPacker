@@ -35,7 +35,7 @@ char			*ft_i_maxtoa_base(intmax_t value, int base)
 	res = NULL;
 	if (base == 10)
 		return (ft_i_maxtoa(value));
-	value = (value < 0) ? (uintmax_t)value : value;
+	value = (value < 0) ? (uintmax_t)value : (uintmax_t)value;
 	i = ft_count(value, base);
 	res = (char*)malloc(sizeof(char) * i);
 	res[i] = 0;

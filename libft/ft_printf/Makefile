@@ -12,7 +12,7 @@
 
 NAME	=	libftprintf.a
 
-CC		=	gcc
+CC		=	/usr/bin/clang
 
 CFLAGS	=	-Wall -Wextra -Werror
 

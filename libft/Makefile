@@ -14,7 +14,7 @@ NAME			=	libft.a
 
 NAME_TMP		=	tmp_libft.a
 
-CC			=	gcc
+CC			=	/usr/bin/clang
 
 CFLAGS			=	-Wall -Wextra -Werror
 
@@ -95,9 +95,10 @@ HEADER			=	libft.h
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@ar rc $(NAME_TMP) $(OBJ)
+#	@ar -rc $(NAME_TMP) $(OBJ)
 	@make -C ft_printf/
-	@libtool -static -o $(NAME) $(NAME_TMP) ft_printf/libftprintf.a
+	@cp ft_printf/libftprintf.a $(NAME)
+	@ar rcs $(NAME) $(OBJ)
 	@ranlib	$(NAME)
 	@rm -rf $(NAME_TMP)
 	@echo "\033[H\033[2J\033[32;5m[OK...]"

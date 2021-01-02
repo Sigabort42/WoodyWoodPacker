@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include <unistd.h>
 # include <sys/mman.h>
 # include <fcntl.h>
@@ -18,5 +19,19 @@
 # include "./elf.h"
 # include "../libft/libft.h"
 
-int	run_packing(Elf64_Ehdr *elf, void *ptr);
-int	woody(void *ptr);
+typedef struct		s_env
+{
+	struct stat	buf;
+  	struct stat	buf_payload;
+	unsigned long long		p;
+	unsigned long long		len;
+	void		*ptr;
+  	void		*ptr_payload;
+	Elf64_Ehdr      *elf64;
+  	Elf64_Phdr      *text_seg64;
+	Elf32_Ehdr      *elf32;
+	int		fd;
+	int		fd2;
+}			t_env;
+
+int	woody(t_env *env);

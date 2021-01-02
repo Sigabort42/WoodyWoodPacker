@@ -35,7 +35,7 @@ char			*ft_ltoa_base(long value, int base)
 	res = NULL;
 	if (base == 10)
 		return (ft_ltoa(value));
-	value = (value < 0) ? (unsigned long long)value : value;
+	value = (value < 0) ? (unsigned long long)value : (unsigned long long)value;
 	i = ft_count(value, base);
 	res = (char*)malloc(sizeof(char) * i);
 	res[i] = 0;

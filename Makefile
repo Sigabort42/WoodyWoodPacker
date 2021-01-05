@@ -18,6 +18,7 @@ CFLAGS	=	-Wall -Wextra -Werror
 
 SRCS	=	main.c \
 		woody.c \
+		inject.c \
 
 OBJS	=	$(SRCS:.c=.o)
 

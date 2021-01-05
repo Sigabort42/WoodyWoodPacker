@@ -12,23 +12,22 @@
 
 #include "./includes/woody.h"
 
-int	run(char *file, char *payload)
+int	run(char *file, char *payload, char *name)
 {
 	t_env		env;
 
+	env.name_output = ft_strdup(name);
 	if ((env.fd = open(file, O_RDWR)) < 0)
 		return (1);
 	if (fstat(env.fd, &env.buf) < 0)
 		return (2);
-	if ((env.ptr = mmap(0, env.buf.st_size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE,
-	env.fd, 0)) == MAP_FAILED)
+	if ((env.ptr = mmap(0, env.buf.st_size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE, env.fd, 0)) == MAP_FAILED)
 		return (3);
 	if ((env.fd2 = open(payload, O_RDWR)) < 0)
 		return (4);
-	if (fstat(env.fd, &env.buf_payload) < 0)
+	if (fstat(env.fd2, &env.buf_payload) < 0)
 		return (5);
-	if ((env.ptr_payload = mmap(0, env.buf_payload.st_size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE,
-	env.fd2, 0)) == MAP_FAILED)
+	if ((env.ptr_payload = mmap(0, env.buf_payload.st_size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_SHARED, env.fd2, 0)) == MAP_FAILED)
 		return (6);
 	woody(&env);
 	if (munmap(env.ptr, env.buf.st_size) < 0)
@@ -39,6 +38,11 @@ int	run(char *file, char *payload)
 int	main(int ac, char **av)
 {	
 	if (ac < 2)
-		ft_printf("%s\n", "./woody FILE");
-	return run(av[1], av[2]);
+	  {
+	    ft_printf("%s FILE [PAYLOAD] [NAME OUTPUT]", av[0]);
+		return (1);
+	  }
+	else if (ac > 3)
+	  return run(av[1], av[2], av[3]);
+	return run(av[1], av[2], "woody");
 }

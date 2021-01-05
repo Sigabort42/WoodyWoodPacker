@@ -1,15 +1,17 @@
 section .text
-        global _start
-
+	global _start
+_ender:
+	call _starter
+	msg db '...WOODY...',0xA,0
+	
 _start:
-        mov al, 0x1
-        mov dl,0x1
-        lea rsi, [rel msg]
-        mov rdx, msg_len
-        syscall
+	jmp _ender
 
-	mov rax, 0x11111111
-	jmp rax
-align 8
-        msg     db '...WOODY.',0x0a,0
-	msg_len equ $ - msg
+_starter:
+	pop rsi
+	mov al, 0x1
+	mov dl, 0x1
+	mov rdx, 0xd
+	syscall
+	mov rdx, 0x0
+	

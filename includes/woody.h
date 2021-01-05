@@ -19,19 +19,22 @@
 # include "./elf.h"
 # include "../libft/libft.h"
 
-typedef struct		s_env
+typedef struct			s_env
 {
-	struct stat	buf;
-  	struct stat	buf_payload;
-	unsigned long long		p;
-	unsigned long long		len;
-	void		*ptr;
-  	void		*ptr_payload;
-	Elf64_Ehdr      *elf64;
-  	Elf64_Phdr      *text_seg64;
-	Elf32_Ehdr      *elf32;
-	int		fd;
-	int		fd2;
-}			t_env;
+	char			*name_output;
+	struct stat		buf;
+  	struct stat		buf_payload;
+       	void			*ptr;
+  	void			*ptr_payload;
+	Elf64_Ehdr		*elf64;
+  	Elf64_Shdr		*sec64;
+	Elf64_Addr		old_vaddr64;
+	Elf32_Ehdr		*elf32;
+	unsigned long long	p;
+	unsigned long long	len;
+	int			fd;
+	int			fd2;	
+}				t_env;
 
-int	woody(t_env *env);
+int				woody(t_env *env);
+int				inject(t_env *env);

@@ -41,19 +41,6 @@ Elf64_Shdr      *elfi_find_section(void *data, char *name)
   return NULL;
 }
 
-char*	rewrite(char *ptr, size_t debut, char *ptr2, size_t size)
-{
-  size_t	i;
-
-  i = 0;
-  while (i < size)
-    {
-      (ptr + debut)[i] = ptr2[i];
-      i++;
-    }
-  return ptr;
-}
-
 int	packing32(t_env *env)
 {
   printf("Launch ELF 32 %p\n", env);
@@ -79,8 +66,6 @@ int	packing64(t_env *env)
       seg = (Elf64_Phdr*)((char*)seg + (unsigned int) env->elf64->e_phentsize);
       i++;
     }
-  //  printf("+ SEGMENT n°%d type=%u flags=%u vaddr=%lx memsz=%lx filesz=%lx offset=%lu\n", i, seg->p_type, seg->p_flags, seg->p_vaddr, seg->p_memsz, seg->p_filesz, seg->p_offset);
-
   env->sec64 = elfi_find_section(env->ptr_payload, ".text");
   //    printf ("+ Payload .text section found at %lx (%lx bytes)\n", 
   //	    env->sec64->sh_offset, env->sec64->sh_size);

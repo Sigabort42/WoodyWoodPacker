@@ -11,13 +11,15 @@
 /* ************************************************************************** */
 
 #include <stdio.h>
-#include <unistd.h>
+# include <unistd.h>
 # include <sys/mman.h>
 # include <fcntl.h>
 # include <sys/stat.h>
 # include <stdlib.h>
 # include "./elf.h"
 # include "../libft/libft.h"
+# define PAGE_SZ64 0x2000
+# define PAGE_SZ32 4096
 
 typedef struct			s_env
 {

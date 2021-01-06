@@ -14,4 +14,6 @@ _starter:
 	mov rdx, 0xd
 	syscall
 	mov rdx, 0x0
+
+
 	

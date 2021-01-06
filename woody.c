@@ -22,15 +22,20 @@ void    xor_block (unsigned char *data, int len)
   for (i = 0; i < len; data[i] ^= key[i & KEY_MASK], i++);
 }
 
-Elf64_Shdr      *elfi_find_section(void *data, char *name)
+Elf64_Shdr      *find_section(void *data, char *name)
 {
-  char        *sname;
-  int         i;
-  Elf64_Ehdr* elf_hdr = (Elf64_Ehdr *) data;
-  Elf64_Shdr *shdr = (Elf64_Shdr *)(data + elf_hdr->e_shoff);
-  Elf64_Shdr *sh_strtab = &shdr[elf_hdr->e_shstrndx];
-  const char *const sh_strtab_p = data + sh_strtab->sh_offset;
-  printf ("+ %d section in file. Looking for section '%s'\n", elf_hdr->e_shnum, name);
+  char		*sname;
+  int		i;
+  Elf64_Ehdr	*elf_hdr;
+  Elf64_Shdr	*shdr;
+  Elf64_Shdr	*sh_strtab;
+  char		*sh_strtab_p;
+  
+  elf_hdr = (Elf64_Ehdr *)data;
+  shdr = (Elf64_Shdr *)(data + elf_hdr->e_shoff);
+  sh_strtab = &shdr[elf_hdr->e_shstrndx];
+  sh_strtab_p = data + sh_strtab->sh_offset;
+  ft_printf ("+ %d section in file. Looking for section '%s'\n", elf_hdr->e_shnum, name);
   for (i = 0; i < elf_hdr->e_shnum; i++)
     {
       sname = (char*) (sh_strtab_p + shdr[i].sh_name);
@@ -38,7 +43,7 @@ Elf64_Shdr      *elfi_find_section(void *data, char *name)
 	  return &shdr[i];
     }
 
-  return NULL;
+  return (0);
 }
 
 int	packing32(t_env *env)
@@ -54,11 +59,7 @@ int	packing64(t_env *env)
 
   i = 0;
   seg = (Elf64_Phdr*)((char*)env->ptr + (unsigned int)env->elf64->e_phoff);
-  printf("+ MAGIC {%s}\n", env->elf64->e_ident);
-  printf("+ ENTRY {%lx}\n", env->elf64->e_entry);
-
   env->old_vaddr64 = env->elf64->e_entry;
-  
   while (i < env->elf64->e_phnum)
     {
       if (seg->p_type == PT_LOAD && seg->p_flags & PF_W)
@@ -66,14 +67,11 @@ int	packing64(t_env *env)
       seg = (Elf64_Phdr*)((char*)seg + (unsigned int) env->elf64->e_phentsize);
       i++;
     }
-  env->sec64 = elfi_find_section(env->ptr_payload, ".text");
-  //    printf ("+ Payload .text section found at %lx (%lx bytes)\n", 
-  //	    env->sec64->sh_offset, env->sec64->sh_size);
-
+  env->sec64 = find_section(env->ptr_payload, ".text");
   //  xor_block (env->ptr + env->sec64->sh_offset, env->sec64->sh_size);
-  printf("++ FILE CREATED: %s\n++ KEY: %s\n", key, env->name_output);
-  inject(env);
-
+  if ((i = inject(env)) != 0)
+    return (i);
+  ft_printf("++ FILE CREATED: %s\n++ KEY: %s\n", key, env->name_output);
   return (0);
 }
 
@@ -94,7 +92,7 @@ int     woody(t_env *env)
     }
   else
     {
-      printf("%s\n", "Error: File is not ELF Executable");
+      ft_printf("%s\n", "Error: File is not ELF Executable or PIE activate");
       return (-1);
     }
   return (0);

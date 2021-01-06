@@ -15,13 +15,15 @@
 int	run(char *file, char *payload, char *name)
 {
   t_env		env;
-
+  int		r;
+  
   env.name_output = ft_strdup(name);
   if ((env.fd = open(file, O_RDWR)) < 0)
     return (1);
   if (fstat(env.fd, &env.buf) < 0)
     return (2);
-  if ((env.ptr = mmap(0, env.buf.st_size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE, env.fd, 0)) == MAP_FAILED)
+  if ((env.ptr = mmap(0, env.buf.st_size, PROT_READ | PROT_WRITE,
+  MAP_PRIVATE, env.fd, 0)) == MAP_FAILED)
     return (3);
   if (ft_strcmp(payload, ""))
     {
@@ -29,13 +31,14 @@ int	run(char *file, char *payload, char *name)
 	return (4);
       if (fstat(env.fd2, &env.buf_payload) < 0)
 	return (5);
-      if ((env.ptr_payload = mmap(0, env.buf_payload.st_size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_SHARED, env.fd2, 0)) == MAP_FAILED)
+      if ((env.ptr_payload = mmap(0, env.buf_payload.st_size,
+      PROT_READ | PROT_WRITE, MAP_PRIVATE, env.fd2, 0)) == MAP_FAILED)
 	return (6);
     }
-  woody(&env);
+  r = woody(&env);
   if (munmap(env.ptr, env.buf.st_size) < 0)
     return (7);
-  return (0);
+  return (r);
 }
 
 int	main(int ac, char **av)

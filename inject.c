@@ -1,6 +1,7 @@
 #include "./includes/woody.h"
 
-void		infect_section(t_env *env, Elf64_Addr text_end, Elf64_Addr payload_vaddr)
+void		infect_section(t_env *env, Elf64_Addr text_end,
+			       Elf64_Addr payload_vaddr)
 {
   Elf64_Shdr* shdr;
   int		payload_len;
@@ -47,21 +48,20 @@ Elf64_Addr	infect_segment(t_env *env, Elf64_Addr *text_end)
 
 char	*infect(t_env *env, int elf_len, char* payload, int payload_len)
 {
-  char* new_file = malloc(elf_len + PAGE_SZ64);
+  Elf64_Addr	entry;
+  Elf64_Addr	payload_vaddr;
+  Elf64_Addr	text_end;
+  char		*new_file;
+  int		jmp_len;
+
   char jmp_entry[] = "\x48\xb8\x41\x41\x41\x41\x41\x41\x41\x41" //mov rax,0x4141414141414141
     "\xff\xe0"; // jmp rax
-  int jmp_len = 12;
+  jmp_len = 12;
+  new_file = malloc(elf_len + PAGE_SZ64);
   payload_len += jmp_len;
-
-  Elf64_Addr entry, payload_vaddr, text_end;
-
-
   entry = env->elf64->e_entry;
-
-
   payload_vaddr = infect_segment(env, &text_end);
   infect_section(env, text_end, payload_vaddr);
-
   memcpy(&jmp_entry[2], (char*)&entry, 8);
   memcpy(new_file, env->ptr, (size_t) text_end);
   memcpy(new_file + text_end, payload, payload_len - jmp_len);
@@ -77,8 +77,10 @@ int	inject(t_env *env)
   char	*new_file;
   int	fd;
 
-  new_file = infect(env, env->buf.st_size, env->ptr_payload + env->sec64->sh_offset, env->sec64->sh_size);
-  if ((fd = open(env->name_output, O_RDWR | O_CREAT, S_IRWXU | S_IRWXG | S_IRWXO)) < 0)
+  new_file = infect(env, env->buf.st_size,
+  env->ptr_payload + env->sec64->sh_offset, env->sec64->sh_size);
+  if ((fd = open(env->name_output, O_RDWR | O_CREAT,
+  S_IRWXU | S_IRWXG | S_IRWXO)) < 0)
     return (2);
   write(fd, new_file, env->buf.st_size + PAGE_SZ64);
   return (0);
